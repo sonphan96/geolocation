@@ -5,10 +5,27 @@
   </head>
 
   <body>
-    <script
-      src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"
-    >
-      navigator.geolocation.getCurrentPosition();
+    <button id="geolocate">Geolocate</button>
+    <div id="output"></div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <script>
+      function showPosition(position) {
+        document.getElementById('output').innerHTML =
+          'Lat: ' +
+          position.coords.latitude +
+          '<br />' +
+          'Lon: ' +
+          position.coords.longitude +
+          '<br />';
+
+        console.log(position);
+      }
+
+      navigator.geolocation.getCurrentPosition(showPosition);
+
+      // document.getElementById("geolocate").onclick = ;
     </script>
   </body>
 </html>
