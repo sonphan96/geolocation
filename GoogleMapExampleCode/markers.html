@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google Map Marker Demo</title>
+  <style>
+    /* The height and width of the div will become the dimensions of the map! */
+    #map {
+      height: 700px;
+      width: 1400px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="map"></div> 
+  <br />
+  <button id="remove_fennell">Remove Fennell Marker</button>
+  <button id="add_aviation">Add Airport Marker</button>
+
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbsua4EskTMpwMIvO5vkvTgw35rhCwTfs&callback=initMap">
+  </script>
+  <script>
+    
+    // See the official Google Map marker documentation here:
+    //   https://developers.google.com/maps/documentation/javascript/markers#introduction
+
+    var map, mohawk_marker;
+
+    function initMap()
+    {
+      // the latitude and longitude of mohawk college fennell campus
+      var mohawkloc = { lat: 43.2387, lng: -79.8881 };
+
+      // Create a Google Map centered on Mohawk College fennell campus
+      map = new google.maps.Map(document.getElementById("map"), 
+        {center: mohawkloc,
+         zoom: 12,
+      });
+      
+      // create a marker centered on Mohawk College fennell campus
+      mohawk_marker = new google.maps.Marker({
+        position: mohawkloc,
+        title: "Mohawk College",  // will appear when we hover over the marker
+      });
+
+      // put the marker onto the map (it will not appear otherwise)
+      mohawk_marker.setMap(map);
+    }
+    
+    // removes the Fennell campus marker from the map
+    function removeFennellMarker()
+    {
+      mohawk_marker.setMap(null);
+    }
+    
+    // sets up a click handler event on the remove fennell button
+    document.getElementById("remove_fennell").onclick = removeFennellMarker;
+    
+    // adds the aviation campus marker to the map
+    function addAviationCampus()
+    {
+      var aviation = { lat: 43.1632, lng: -79.9266 };
+
+      // create a marker centered on the airport campus
+      aviation_marker = new google.maps.Marker({
+        position: aviation,
+        title: "Mohawk College Aviation Campus",  // will appear when we hover over the marker
+      });
+
+      // put the marker onto the map (it will not appear otherwise)
+      aviation_marker.setMap(map);      
+    }
+   
+    // sets up a click handler event on the add aviation campus button
+    document.getElementById("add_aviation").onclick = addAviationCampus;
+
+  </script>
+</body>
+</html>

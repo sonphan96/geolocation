@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Basic Google Map Demo</title>
+  <style>
+    /* The height and width of the div will become the dimensions of the map! */
+    #map {
+      height: 700px;
+      width: 1400px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="map"></div>
+
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbsua4EskTMpwMIvO5vkvTgw35rhCwTfs&callback=initMap">
+  </script>
+  <script>
+    
+    // See the official Google Map documentation here:
+    //   https://developers.google.com/maps/documentation/javascript/overview
+
+    // The initMap() function will be called when the above Google Maps JS
+    // library finishes loading.  Notice the URL parameter callback=initMap,
+    // this is how the library knows to call this initMap function when it 
+    // is done loading.  We could change the name of the function in that 
+    // URL if we wanted to call it something different.
+    function initMap()
+    {
+
+      // This will create a new Google Map object, and the variable map will 
+      // contain a reference to the object.  The first argument is the element 
+      // to place the map into, and the 2nd argument is a JSON with keys and 
+      // objects describing how to make the map.  At a minimum we need to 
+      // provide center and zoom values as part of this object.
+      map = new google.maps.Map(document.getElementById("map"), 
+        {center: { lat: 43.2387, lng: -79.8881 },
+         zoom: 12,
+      });
+    }
+  </script>
+</body>
+</html>

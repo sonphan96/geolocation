@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google Map Geocoding Demo</title>
+  <style>
+    /* The height and width of the div will become the dimensions of the map! */
+    #map {
+      height: 700px;
+      width: 1400px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="map"></div>
+  <br />
+  <strong style="font-size:22px;">Address:</strong> 
+  <input type="text" id="address" size="100" style="font-size:22px;">
+  <br /> <br />
+  <button id="geocode" style="font-size:22px;">Geocode</button>
+  <br /> <br />
+  <span id="coords" style="font-size:22px;"></span>
+
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbsua4EskTMpwMIvO5vkvTgw35rhCwTfs&callback=initMap">
+  </script>
+  <script>
+    
+    // See the official Google Map geocoding documentation here:
+    //   https://developers.google.com/maps/documentation/javascript/geocoding
+
+    function initMap()
+    {
+
+      map = new google.maps.Map(document.getElementById("map"), 
+        {center: { lat: 43.2387, lng: -79.8881 },
+         zoom: 12,
+      });
+      
+      // geocoder service object
+      geocoder = new google.maps.Geocoder();
+
+    }
+
+    function codeAddress() {
+      var address = document.getElementById('address').value;
+
+      // perform geocoding for the address entered into the input textbox, a 
+      // callback function is given the latitude and longitude as an an 
+      // argument as part of a results object..
+      geocoder.geocode( { 'address': address}, function(results, status) {
+        if (status == 'OK') {
+          
+          // we could center the map at the location
+          // map.setCenter(results[0].geometry.location);
+          
+          // put the latitude and longitude on the page as text
+          document.getElementById("coords").innerHTML =
+            "coords: " + 
+            results[0].geometry.location.lat() + ", " + 
+            results[0].geometry.location.lng();
+           
+          // put a marker on the map at the given position
+          var marker = new google.maps.Marker({
+              map: map,
+              position: results[0].geometry.location
+          });
+        } else {
+          alert('Geocode was not successful for the following reason: ' + status);
+        }
+      });
+    }
+    
+    // call the codeAddress function when the geolocate button is clicked
+    document.getElementById("geocode").onclick = codeAddress;
+
+  </script>
+</body>
+</html>

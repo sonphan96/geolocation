@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google Map Directions Demo</title>
+  <style>
+    /* The height and width of the div will become the dimensions of the map! */
+    #map {
+      height: 700px;
+      width: 1400px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="map"></div>
+
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbsua4EskTMpwMIvO5vkvTgw35rhCwTfs&callback=initMap">
+  </script>
+  <script>
+    
+    // See the official Google Map directions documentation here:
+    //   https://developers.google.com/maps/documentation/javascript/directions
+
+    function initMap()
+    {
+      // services used to provide directions
+      directionsService = new google.maps.DirectionsService();
+      directionsRenderer = new google.maps.DirectionsRenderer();
+      
+      // create the map
+      map = new google.maps.Map(document.getElementById("map"), 
+        {center: { lat: 43.2387, lng: -79.8881 },
+         zoom: 12,
+      });
+      
+      // have the directions renderer work with this map
+      directionsRenderer.setMap(map);
+      
+      // setup a basic directions request with origin, destination, travel mode,
+      // there are MANY more possible options here
+      request = {
+        origin: "135 Fennell Avenue West, Hamilton, Ontario",
+        destination: "64 Melrose Ave N, Hamilton, Ontario",
+        travelMode: 'DRIVING'
+      };
+
+      // use the directions service and directions renderer to render the 
+      // directions on the map
+      directionsService.route(request, function(result, status) {
+        if (status == 'OK') {
+          directionsRenderer.setDirections(result);
+          console.log(result);
+        }
+      });
+
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google Map Geolocation Demo</title>
+  <style>
+    /* The height and width of the div will become the dimensions of the map! */
+    #map {
+      height: 700px;
+      width: 1400px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="map"></div>
+  <br />
+  <button id="geolocate">Geolocate</button>
+
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbsua4EskTMpwMIvO5vkvTgw35rhCwTfs&callback=initMap">
+  </script>
+  <script>
+    
+    // create the map
+    function initMap()
+    {
+      map = new google.maps.Map(document.getElementById("map"), 
+        {center: { lat: 43.2387, lng: -79.8881 },
+         zoom: 12,
+      });
+    }
+
+    function showPositionOnMap(position)
+    {
+      // create a marker centered at the user's location
+      user_location = new google.maps.Marker({
+        position: { lat: position.coords.latitude, 
+                    lng: position.coords.longitude
+                  },
+        title: "Your Location",  // will appear when we hover over the marker
+        // We use a custom marker:
+        //   https://developers.google.com/maps/documentation/javascript/custom-markers
+        // A list of icons we can use is found here:
+        //   http://kml4earth.appspot.com/icons.html
+        icon: "http://maps.google.com/mapfiles/kml/shapes/poi.png"
+      });
+
+      // put the marker onto the map (it will not appear otherwise)
+      user_location.setMap(map);
+    }
+    
+    // call showPositionOnMap after finding the user's current location
+    document.getElementById("geolocate").onclick = function()
+    {
+      navigator.geolocation.getCurrentPosition(showPositionOnMap);
+    }
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google Map Array Of Markers Demo</title>
+  <style>
+    /* The height and width of the div will become the dimensions of the map! */
+    #map {
+      height: 700px;
+      width: 1400px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="map"></div> 
+  <br />
+
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbsua4EskTMpwMIvO5vkvTgw35rhCwTfs&callback=initMap">
+  </script>
+  <script src="education.js"></script>
+  <script>
+    
+    // See the official Google Map marker documentation here:
+    //   https://developers.google.com/maps/documentation/javascript/markers#introduction
+
+    var map;
+
+    function initMap()
+    {
+      // Create a Google Map centered on Hamilton, Ontario 
+      map = new google.maps.Map(document.getElementById("map"), 
+        {center: {lat: 43.2557, lng: -79.8711},
+         zoom: 12,
+      });
+      
+      // create the infowindow... we only create ONE infowindow and move it 
+      // around and set its content when a marker is clicked as need be.
+      infowindow = new google.maps.InfoWindow();
+      
+      // when the marker is clicked, this function will run to open the 
+      // infowindow... the "this" keyword will refer to the marker/object 
+      // that was actually clicked... we'll use *that* to open the 
+      // infowindow at that marker's location, and we'll store the name 
+      // of each school in the "NAME" property of each marker object (each
+      // marker is ultimately a javascript object, we can set whatever keys
+      // we like...).
+      marker_clicked = function() {
+        infowindow.close(); // Close previously opened infowindow
+        infowindow.setContent(this.NAME);
+        infowindow.open(map, this);
+      }
+
+      // put markers on the map for all the schools in education.js 
+      for (i = 0; i < education.length; i++)
+      {
+        // set the icon based on the category of the school
+        if (education[i].CATEGORY == "Elementary School")
+          new_icon = "http://maps.google.com/mapfiles/kml/paddle/grn-blank.png";
+        else if (education[i].CATEGORY == "Secondary School")
+          new_icon = "http://maps.google.com/mapfiles/kml/paddle/pink-blank.png";
+        else if (education[i].CATEGORY == "Post Secondary")
+          new_icon = "http://maps.google.com/mapfiles/kml/paddle/ylw-blank.png";
+        else 
+          new_icon = "http://maps.google.com/mapfiles/kml/paddle/blu-blank.png";
+
+        // create the marker based on the array in the education.js file
+        new_marker = new google.maps.Marker({
+          position: {lat: education[i].LATITUDE,  
+                     lng: education[i].LONGITUDE
+                    },
+          title: education[i].NAME, 
+          icon: new_icon
+        });
+
+        // put the marker onto the map (it will not appear otherwise)
+        new_marker.setMap(map);
+
+        // store the name of the school as a property of the marker object
+        new_marker.NAME = education[i].NAME;
+        
+        // have the info window open when the marker is clicked...
+        new_marker.addListener('click', marker_clicked);
+
+      }
+    }
+    
+  </script>
+</body>
+</html>

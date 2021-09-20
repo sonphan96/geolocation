@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google Map Infowindow Open Event</title>
+  <style>
+    /* The height and width of the div will become the dimensions of the map! */
+    #map {
+      height: 700px;
+      width: 1400px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="map"></div> 
+  <br />
+  <span id="details" style="font-size: 24px;"></span>
+
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbsua4EskTMpwMIvO5vkvTgw35rhCwTfs&callback=initMap">
+  </script>
+  <script>
+    
+    // See the official Google Maps documentation here:
+    //   https://developers.google.com/maps/documentation/javascript/infowindows#open
+
+    var map, thf_marker;
+
+    function initMap()
+    {
+      // the latitude and longitude of tim hortons field
+      var thf_loc = { lat: 43.2522, lng: -79.8301 };
+
+      // Create a Google Map centered on Tim Hortons Field
+      map = new google.maps.Map(document.getElementById("map"), 
+        {center: thf_loc,
+         zoom: 16,
+      });
+      
+      // create a marker centered on Tim Hortons Field
+      thf_marker = new google.maps.Marker({
+        position: thf_loc,
+        title: "Tim Hortons Field",  // will appear when we hover over the marker
+      });
+
+      // put the marker onto the map (it will not appear otherwise)
+      thf_marker.setMap(map);
+      
+      // content string for the infowindow, it can include HTML!
+      contentString = 
+        "<h3>Tim Hortons Field</h3>" +
+        "<p>Home of the <a href=\"https://ticats.ca/\" target=\"_blank\">" +
+        "Hamilton Tiger-Cats</a> and <a href=\"https://forgefc.canpl.ca/\"" + 
+        "target=\"_blank\">Forge FC</a>, with a capacity of 24,000. <br /><br />" +
+        "<img src=\"https://assets-sports.thescore.com/football/team/312/logo.png\"" + 
+        "width=\"100\">";
+
+      // create the infowindow
+      const infowindow = new google.maps.InfoWindow({
+       content: contentString,
+      });
+      
+      // open the info window with the tim horton field marker as the anchor
+      thf_marker.addListener("click", 
+        function() {
+          
+          // open the info window in response to clicking the marker
+          infowindow.open({
+            anchor: thf_marker,
+            shouldFocus: false,
+          });
+         
+          // we can do other thisng too after a marker is clicked, for example 
+          // we can also set the content of a span element
+          document.getElementById("details").innerHTML = "Tim Hortons Field";
+
+      });
+
+    }
+  </script>
+</body>
+</html>
