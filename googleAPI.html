@@ -16,6 +16,8 @@
     <button id="remove_marker">Remove</button>
     <br />
     <button id="add_aviation">Add Airport Marker</button>
+    <br />
+    <button id="geolocate">Geolocate</button>
     <script
       async
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbsua4EskTMpwMIvO5vkvTgw35rhCwTfs&callback=initMap"
@@ -23,25 +25,29 @@
     <script>
       // create the map
       const timLoc = { lat: 43.2522, lng: -79.8301 };
+      const mohawkPos = { lat: 43.2387, lng: -79.8881 };
 
       function initMap() {
-        const mohawkPos = { lat: 43.2387, lng: -79.8881 };
-
+        // Google Map
         map = new google.maps.Map(document.getElementById('map'), {
           center: timLoc,
           zoom: 12,
         });
+
+        // Mohawk marker
+
         mohawk_marker = new google.maps.Marker({
           position: mohawkPos,
           title: 'Hello World',
         });
+        mohawk_marker.setMap(map);
 
+        // Tim Hortons field marker
         timFieldMarker = new google.maps.Marker({
           position: timLoc,
           title: 'Tim Hortons',
         });
 
-        mohawk_marker.setMap(map);
         timFieldMarker.setMap(map);
 
         // Info window
@@ -53,12 +59,28 @@
           content: contentString,
         });
 
-        infoWindow.open({
-          anchor: timFieldMarker,
-          shouldFocus: false,
+        timFieldMarker.addListener('click', function () {
+          infoWindow.open({
+            anchor: timFieldMarker,
+            shouldFocus: false,
+          });
         });
       }
 
+      // Show user location
+      function showPositionOnMap(position) {
+        user_location = new google.maps.Marker({
+          position: {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          },
+          title: 'Your location',
+        });
+
+        user_location.setMap(map);
+      }
+
+      // Remove Fennel Marker
       function removeFennelMarker() {
         mohawk_marker.setMap(null);
       }
@@ -75,6 +97,9 @@
 
       document.getElementById('add_aviation').onclick = addAviationCampus;
       document.getElementById('remove_marker').onclick = removeFennelMarker;
+      document.getElementById('geolocate').onclick = function () {
+        navigator.geolocation.getCurrentPosition(showPositionOnMap);
+      };
     </script>
   </body>
 </html>
