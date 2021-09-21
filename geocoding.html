@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    Geocoding
+    <title>Geocoding</title>
     <style>
       #map {
         height: 700px;
@@ -13,7 +13,8 @@
   <body>
     <div id="map"></div>
     <br />
-    <button id="geolocate">Geolocate</button>
+    Address<input type="text" id="address" /> <br />
+    <button id="geocode">Geocode</button>
 
     <script
       async
@@ -31,19 +32,21 @@
         });
 
         geocoder = new google.maps.Geocoder();
-
-        geocoder.geocode(
-          { address: '135 Fennell Avenue West, Hamilton, Ontario' },
-          function (results, status) {
-            if (status == 'OK') {
-              marker = new google.maps.Marker({
-                map: map,
-                position: results[0].geometry.location,
-              });
-            }
-          }
-        );
       }
+
+      function codeAddress() {
+        addr = document.getElementById('address').value;
+        geocoder.geocode({ address: addr }, function (results, status) {
+          if (status == 'OK') {
+            marker = new google.maps.Marker({
+              map: map,
+              position: results[0].geometry.location,
+            });
+          }
+        });
+      }
+
+      document.getElementById('geocode').onclick = codeAddress;
     </script>
   </body>
 </html>
