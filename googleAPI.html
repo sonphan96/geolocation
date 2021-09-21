@@ -43,6 +43,20 @@
 
         mohawk_marker.setMap(map);
         timFieldMarker.setMap(map);
+
+        // Info window
+        contentString =
+          '<h3>Tim Hortons Field </h3>' +
+          '<p>Home of the Hamilton Tiger-Cats</p>';
+
+        infoWindow = new google.maps.InfoWindow({
+          content: contentString,
+        });
+
+        infoWindow.open({
+          anchor: timFieldMarker,
+          shouldFocus: false,
+        });
       }
 
       function removeFennelMarker() {
