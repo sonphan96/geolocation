@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Google Map Education Demo</title>
+    <style>
+      /* The height and width of the div will become the dimensions of the map! */
+      #map {
+        height: 700px;
+        width: 1400px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="map"></div>
+
+    <script
+      async
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbsua4EskTMpwMIvO5vkvTgw35rhCwTfs&callback=initMap"
+    ></script>
+    <script src="education.js"></script>
+    <script>
+      function initMap() {
+        // create the map
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: { lat: 43.2387, lng: -79.8881 },
+          zoom: 12,
+        });
+
+        for (i = 0; i < education.features.length; i++) {
+          //
+          if (
+            education.features[i].properties.CATEGORY == 'Elementary School'
+          ) {
+            new_icon =
+              'http://maps.google.com/mapfiles/kml/paddle/grn-blank.png';
+          } else if (
+            education.features[i].properties.CATEGORY == 'Secondary School'
+          ) {
+            new_icon =
+              'http://maps.google.com/mapfiles/kml/paddle/purple-blank.png';
+          } else if (
+            education.features[i].properties.CATEGORY == 'Post Secondary'
+          ) {
+            new_icon =
+              'http://maps.google.com/mapfiles/kml/paddle/ylw-blank.png';
+          } else {
+            new_icon =
+              'http://maps.google.com/mapfiles/kml/paddle/ltblu-blank.png';
+          }
+
+          new_marker = new google.maps.Marker({
+            position: {
+              lng: education.features[i].geometry.coordinates[0],
+              lat: education.features[i].geometry.coordinates[1],
+            },
+            title: education.features[i].properties.NAME,
+            icon: new_icon,
+          });
+
+          new_marker.setMap(map);
+        }
+      }
+    </script>
+  </body>
+</html>
