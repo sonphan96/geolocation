@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Google Map Libraries</title>
+    <style>
+      #map {
+        height: 700px;
+        width: 1400px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="map"></div>
+
+    <button id="all_marker">All Libraries</button>
+
+    <button id="hamilton_marker">Hamilton's Libraries</button>
+
+    <script
+      async
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbsua4EskTMpwMIvO5vkvTgw35rhCwTfs&callback=initMap"
+    ></script>
+
+    <script src="libraries.js"></script>
+
+    <script>
+      // Create the google map
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: { lat: 43.2387, lng: -79.8881 },
+          zoom: 12,
+        });
+
+        infoWindow = new google.maps.InfoWindow();
+
+        marker_clicked = function () {
+          infoWindow.setContent(this.NAME);
+          infoWindow.open(map, this);
+        };
+
+        for (i = 0; i < libraries.features.length; i++) {
+          library_marker = new google.maps.Marker({
+            position: {
+              lng: libraries.features[i].geometry.coordinates[0],
+              lat: libraries.features[i].geometry.coordinates[1],
+            },
+            title: libraries.features[i].properties.NAME,
+          });
+
+          library_marker.setMap(map);
+          library_marker.NAME = libraries.features[i].properties.NAME;
+          library_marker.addListener('click', marker_clicked);
+        }
+      }
+
+      // function hamilton_marker() {
+      //   for (i = 0; i < libraries.features.length; i++) {
+      //     if (libraries.features[i].properties.COMMUNITY != 'Hamilton') {
+      //       library_marker.setMap(null);
+      //     }
+      //   }
+      // }
+
+      // document.getElementById('hamilton_marker').onclick = hamilton_marker;
+    </script>
+  </body>
+</html>
