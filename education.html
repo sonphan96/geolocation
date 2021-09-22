@@ -27,6 +27,13 @@
           zoom: 12,
         });
 
+        infoWindow = new google.maps.InfoWindow();
+
+        marker_clicked = function () {
+          infoWindow.setContent(this.NAME);
+          infoWindow.open(map, this);
+        };
+
         for (i = 0; i < education.features.length; i++) {
           //
           if (
@@ -59,6 +66,8 @@
           });
 
           new_marker.setMap(map);
+          new_marker.NAME = education.features[i].properties.NAME;
+          new_marker.addListener('click', marker_clicked);
         }
       }
     </script>
