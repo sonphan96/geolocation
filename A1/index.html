@@ -12,10 +12,15 @@
 
   <body>
     <div id="map"></div>
-
+    <!-- All Buttons -->
     <button id="all_marker">All Libraries</button>
-
     <button id="hamilton_marker">Hamilton's Libraries</button>
+    <br />
+    <button id="geolocate">Geolocate</button>
+    <br />
+    Address<input type="text" id="address" />
+    <br />
+    <button id="geocode">Geocode</button>
 
     <script
       async
@@ -25,6 +30,10 @@
     <script src="libraries.js"></script>
 
     <script>
+      const markers = [];
+      let user_location;
+      let direction_available = false;
+
       // Create the google map
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
@@ -33,13 +42,14 @@
         });
 
         infoWindow = new google.maps.InfoWindow();
+        geocoder = new google.maps.Geocoder();
 
         marker_clicked = function () {
           infoWindow.setContent(this.NAME);
           infoWindow.open(map, this);
         };
 
-        for (i = 0; i < libraries.features.length; i++) {
+        for (let i = 0; i < libraries.features.length; i++) {
           library_marker = new google.maps.Marker({
             position: {
               lng: libraries.features[i].geometry.coordinates[0],
@@ -51,18 +61,93 @@
           library_marker.setMap(map);
           library_marker.NAME = libraries.features[i].properties.NAME;
           library_marker.addListener('click', marker_clicked);
+          markers.push(library_marker);
         }
       }
 
-      // function hamilton_marker() {
-      //   for (i = 0; i < libraries.features.length; i++) {
-      //     if (libraries.features[i].properties.COMMUNITY != 'Hamilton') {
-      //       library_marker.setMap(null);
-      //     }
-      //   }
-      // }
+      // Display all markers
+      function all_marker() {
+        clear_marker();
+        for (let i = 0; i < libraries.features.length; i++) {
+          library_marker = new google.maps.Marker({
+            position: {
+              lng: libraries.features[i].geometry.coordinates[0],
+              lat: libraries.features[i].geometry.coordinates[1],
+            },
+            title: libraries.features[i].properties.NAME,
+          });
 
-      // document.getElementById('hamilton_marker').onclick = hamilton_marker;
+          library_marker.setMap(map);
+          library_marker.NAME = libraries.features[i].properties.NAME;
+          library_marker.addListener('click', marker_clicked);
+          markers.push(library_marker);
+        }
+      }
+
+      // Display marker for Hamilton's Libraries
+      function hamilton_marker() {
+        clear_marker();
+        for (let i = 0; i < libraries.features.length; i++) {
+          if (libraries.features[i].properties.COMMUNITY == 'Hamilton') {
+            library_marker = new google.maps.Marker({
+              position: {
+                lng: libraries.features[i].geometry.coordinates[0],
+                lat: libraries.features[i].geometry.coordinates[1],
+              },
+              title: libraries.features[i].properties.NAME,
+            });
+
+            library_marker.setMap(map);
+            library_marker.NAME = libraries.features[i].properties.NAME;
+            library_marker.addListener('click', marker_clicked);
+            markers.push(library_marker);
+          }
+        }
+      }
+
+      // Clear markers on map
+      function clear_marker() {
+        for (let i = 0; i < markers.length; i++) {
+          markers[i].setMap(null);
+        }
+      }
+
+      // Display user location
+      function showPositionOnMap(position) {
+        user_location = new google.maps.Marker({
+          position: {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          },
+          title: 'Your Location',
+          icon: 'http://maps.google.com/mapfiles/kml/paddle/grn-blank.png',
+        });
+
+        user_location.setMap(map);
+        direction_available = true;
+      }
+
+      // Display input location
+      function codeAddress() {
+        address = document.getElementById('address').value;
+        geocoder.geocode({ address: address }, function (results, status) {
+          if (status == 'OK') {
+            marker = new google.maps.Marker({
+              map: map,
+              position: results[0].geometry.location,
+              icon: 'http://maps.google.com/mapfiles/kml/paddle/grn-blank.png',
+            });
+          }
+        });
+      }
+
+      document.getElementById('hamilton_marker').onclick = hamilton_marker;
+      document.getElementById('all_marker').onclick = all_marker;
+      document.getElementById('geolocate').onclick = function () {
+        navigator.geolocation.getCurrentPosition(showPositionOnMap);
+      };
+
+      document.getElementById('geocode').onclick = codeAddress;
     </script>
   </body>
 </html>
